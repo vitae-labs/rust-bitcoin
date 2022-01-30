@@ -377,7 +377,7 @@ impl fmt::Display for Address {
             Payload::PubkeyHash(ref hash) => {
                 let mut prefixed = [0; 21];
                 prefixed[0] = match self.network {
-                    Network::Bitcoin => 0,
+                    Network::Bitcoin => 71,
                     Network::Testnet | Network::Signet | Network::Regtest => 111,
                 };
                 prefixed[1..].copy_from_slice(&hash[..]);
@@ -386,7 +386,7 @@ impl fmt::Display for Address {
             Payload::ScriptHash(ref hash) => {
                 let mut prefixed = [0; 21];
                 prefixed[0] = match self.network {
-                    Network::Bitcoin => 5,
+                    Network::Bitcoin => 13,
                     Network::Testnet | Network::Signet | Network::Regtest => 196,
                 };
                 prefixed[1..].copy_from_slice(&hash[..]);
@@ -397,7 +397,7 @@ impl fmt::Display for Address {
                 program: ref prog,
             } => {
                 let hrp = match self.network {
-                    Network::Bitcoin => "bc",
+                    Network::Bitcoin => "vi",
                     Network::Testnet | Network::Signet => "tb",
                     Network::Regtest => "bcrt",
                 };
@@ -445,7 +445,7 @@ impl FromStr for Address {
         // try bech32
         let bech32_network = match find_bech32_prefix(s) {
             // note that upper or lowercase is allowed but NOT mixed case
-            "bc" | "BC" => Some(Network::Bitcoin),
+            "vi" | "VI" => Some(Network::Bitcoin),
             "tb" | "TB" => Some(Network::Testnet), // this may also be signet
             "bcrt" | "BCRT" => Some(Network::Regtest),
             _ => None,
@@ -501,11 +501,11 @@ impl FromStr for Address {
         }
 
         let (network, payload) = match data[0] {
-            0 => (
+            71 => (
                 Network::Bitcoin,
                 Payload::PubkeyHash(PubkeyHash::from_slice(&data[1..]).unwrap()),
             ),
-            5 => (
+            13 => (
                 Network::Bitcoin,
                 Payload::ScriptHash(ScriptHash::from_slice(&data[1..]).unwrap()),
             ),

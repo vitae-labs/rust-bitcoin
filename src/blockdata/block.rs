@@ -55,9 +55,12 @@ pub struct BlockHeader {
     pub bits: u32,
     /// The nonce, selected to obtain a low enough blockhash
     pub nonce: u32,
+    /// The accumulator checkpoint, accumulator for zerocoin
+    // todo : used BlockHash for now (accumulator only for)
+    pub accumulator_checkpoint: BlockHash,
 }
 
-impl_consensus_encoding!(BlockHeader, version, prev_blockhash, merkle_root, time, bits, nonce);
+impl_consensus_encoding!(BlockHeader, version, prev_blockhash, merkle_root, time, bits, nonce, accumulator_checkpoint);
 
 impl BlockHeader {
     /// Return the block hash.
